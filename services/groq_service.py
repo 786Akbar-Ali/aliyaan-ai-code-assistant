@@ -19,12 +19,18 @@ load_dotenv(dotenv_path=env_path)
 # =========================
 # GET API KEY (LOCAL + CLOUD)
 # =========================
-GROQ_API_KEY = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
+try:
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+    if not GROQ_API_KEY:
+        GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+
+except Exception:
+    GROQ_API_KEY = None
 
 if not GROQ_API_KEY:
-    st.error("❌ GROQ_API_KEY not found. Add it in .env (local) or Streamlit Secrets.")
+    st.error("❌ GROQ_API_KEY not found. Add it in Streamlit Secrets.")
     st.stop()
-
 # =========================
 # INIT CLIENT
 # =========================
